@@ -2,7 +2,9 @@
   "name": "sementinhas-kids",
   "version": "0.9.1",
   "private": true,
+  "description": "Escalas offline para o Ministério Sementinhas Kids",
   "scripts": {
+    "start": "python -m http.server 8080",
     "check": "node --test tests/*.test.cjs"
   },
   "license": "UNLICENSED"

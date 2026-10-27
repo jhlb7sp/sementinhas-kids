@@ -1,0 +1,44 @@
+
+:root{font-family:system-ui,'Segoe UI',Arial,sans-serif;color:#24304a;background:#fffaf2}*{box-sizing:border-box}body{margin:0}.top{background:linear-gradient(110deg,#1b3780,#1777c7 56%,#8dd1eb);color:white;padding:12px 28px;display:flex;justify-content:space-between;align-items:center;gap:12px}.top h1{margin:0;font-size:25px}.top small{color:#b6d5d0}.wrap{max-width:1250px;margin:20px auto;padding:0 16px}nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab,button{cursor:pointer;border:1px solid #cee0df;border-radius:9px;padding:9px 12px;background:white;color:#21454a;font-weight:600}.tab.active,button.primary{background:#087ac1;color:white;border-color:#087ac1}button.danger{color:#a52e33;border-color:#e9b9bb}.panel{background:white;border:1px solid #f5daba;border-radius:19px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px #224d4510}h2{margin:0 0 14px;font-size:20px}h3{margin:14px 0 8px}p,.sub{color:#5b6a70}.flex{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:15px}label{display:block;font-size:13px;font-weight:650;color:#435d62;margin-bottom:5px}input,select{border:1px solid #b9d1d0;border-radius:8px;padding:9px;width:100%;font:inherit;background:white}input[type=checkbox]{width:auto}input[type=file]{max-width:320px}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px solid #e1eae8;text-align:left;padding:10px 8px;vertical-align:middle}th{background:#eff7f4;white-space:nowrap;color:#285451}td select{min-width:105px}.muted{color:#6e8182}.info{border-radius:9px;background:#ecf8f3;padding:11px 13px;margin:10px 0;color:#235b4e}.warn{background:#fff5e5;color:#865e1c}.error{background:#fcecec;color:#9e2727}.badge{padding:3px 7px;border-radius:20px;background:#deeee9;color:#136550;font-size:12px}.checkrow{display:flex;gap:8px;align-items:center}.checkrow input{width:auto}.mini{font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.count{font-size:23px;font-weight:750;color:#087b67}.stat{background:#fff4de;border-radius:10px;padding:14px;flex:1;min-width:145px}tr.inactive{opacity:.55}.hide{display:none!important}footer{padding:10px 0 30px;color:#758a8a;text-align:center}.nowrap{white-space:nowrap}@media(max-width:700px){.grid2{grid-template-columns:1fr}.top{padding:16px}td,th{padding:8px 5px}.panel{padding:13px}}@media print{.top,nav,.actions,.noprint,.panel:not(.printable),button,footer{display:none!important}.wrap{max-width:none;margin:0}.panel.printable{border:none;box-shadow:none;padding:0}table{font-size:12px}h2{margin-top:0}}
+
+.brand{display:flex;align-items:center;gap:16px}.brand img.kids-logo{width:75px;height:80px;object-fit:contain}.brand img.church-logo{width:102px;height:76px;object-fit:contain;padding:2px;background:transparent}.top h1{color:#fff2a6}.top small{color:#f3f8ff}.tab{border-radius:24px}.panel h2{color:#184e95}.panel h3{color:#ce541a}.smiley{font-size:26px}.kids-logo{animation:bounceGlow 3.4s ease-in-out infinite}.top h1{animation:floatTitle 4s ease-in-out infinite}.tab.active,button.primary{box-shadow:0 8px 18px #0b7bc433}.panel{transition:transform .18s ease, box-shadow .18s ease}.panel:hover{transform:translateY(-1px);box-shadow:0 8px 24px #224d4518}@keyframes bounceGlow{0%,100%{transform:translateY(0);filter:drop-shadow(0 0 0 transparent)}50%{transform:translateY(-3px);filter:drop-shadow(0 6px 10px rgba(255,229,72,.35))}}@keyframes floatTitle{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}.special-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}.event-card{background:#fffaf0;border:1px solid #f3d8ac;border-radius:15px;padding:13px}.event-card h4{margin:0 0 8px;color:#b94723}.event-card input:focus,.event-card select:focus{outline:2px solid #1789c8;outline-offset:2px}.event-card [data-event-status]{align-self:center;color:#4b6880}.event-card .fields{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}.event-people{display:grid;grid-template-columns:minmax(135px,2fr) minmax(95px,1fr) minmax(135px,2fr) minmax(90px,1fr) auto;gap:8px;align-items:end;margin-top:10px;padding:10px;border:1px solid #f3e1c4;border-radius:10px;background:white}@media(max-width:850px){.event-people{grid-template-columns:repeat(2,minmax(0,1fr))}.event-people button{grid-column:2;justify-self:end}}.event-people button{padding:9px}.lesson{min-width:75px;width:85px}.date-list{display:flex;gap:12px;flex-wrap:wrap}.date-list .checkrow{background:#f6fbff;border-radius:9px;padding:6px 9px}.room-pill{color:#df580d;font-weight:700}.print-header{display:none}.printable #report{display:block}.lesson-print{display:none}
+@media print{@page{size:A4 landscape;margin:11mm}body{background:white}.top,nav,.actions,.noprint,.panel:not(.printable),button,footer,#report{display:none!important}.print-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.print-header img{max-height:67px;max-width:100px;object-fit:contain}.lesson-print{display:inline}th,td{border:1px solid #bac8d7;padding:8px!important}.panel.printable h3{margin-top:18px;break-after:avoid}.panel.printable{display:block}.panel.printable table{break-inside:avoid}#sheetTitle{text-align:center;color:#145da6;font-size:23px}}
+
+/* v0.9: barra de navegação fixa, ações de exportação e densidade otimizada */
+.sticky-shell{position:sticky;top:0;z-index:100;background:#fffaf2;box-shadow:0 3px 14px #17435b22}
+.sticky-shell .top{padding:7px 24px;min-height:78px}
+.sticky-shell .brand img.kids-logo{width:58px;height:60px}
+.sticky-shell .brand img.church-logo{width:79px;height:60px}
+.sticky-shell .top h1{font-size:22px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  max-width:1250px;margin:auto;padding:9px 16px}
+.toolbar nav{margin:0;display:flex;gap:7px;flex-wrap:wrap}
+.toolbar .tab,.toolbar .export-btn{padding:8px 12px}
+.toolbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.export-btn{background:#f1faff;border:1px solid #85c8e8;color:#075889}
+.export-btn:hover{background:#dceffc}
+.wrap{margin:12px auto}
+.panel{padding:16px 18px;margin-bottom:12px}
+h2{margin-bottom:10px}
+h3{margin:11px 0 7px}
+.fields{gap:9px;margin-bottom:10px}
+.fields input,.fields select{padding:8px}
+.actions{margin:9px 0}
+td,th{padding:8px 7px}
+@media(max-width:760px){
+ .toolbar{align-items:flex-start;flex-wrap:wrap}
+ .toolbar-actions{width:100%}
+ .toolbar-actions button{flex:1}
+ .sticky-shell .top{padding:7px 12px}
+ .sticky-shell .top h1{font-size:18px}
+ .sticky-shell .brand img.church-logo{width:54px;height:50px}
+ .sticky-shell .brand img.kids-logo{width:50px;height:52px}
+ .sticky-shell .top .brand{gap:6px}
+ .sticky-shell #mode{font-size:11px}
+ .panel{padding:12px}
+}
+@media print{
+ .sticky-shell{display:none!important}
+ .wrap{margin:0}
+ .panel{padding:0}
+}

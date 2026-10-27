@@ -1,19 +1,49 @@
 # Sementinhas Kids 🌱
 
-Sistema offline de planejamento de escalas para ministérios infantis.
+Sistema offline de escalas do ministério infantil da Igreja Semear e Colher.
 
-## Estrutura planejada
-- `index.html`: interface
-- `src/css/style.css`: estilos e impressão
-- `src/js/`: geração, validação, equipe, eventos, histórico e exportação
-- `src/assets/`: identidade visual
-- `tests/`: testes automatizados
+## Abrir o projeto
+Abra `index.html` no Chrome ou Edge. Não há dependências obrigatórias para a versão web. 
+Para servidor local (opcional), use `python -m http.server 8080` e acesse `http://localhost:8080`.
 
-## Segurança
-Não publique backups JSON, histórico de escalas reais ou dados pessoais de voluntários.
-A versão navegador salva dados localmente; faça backups antes de atualizar.
+## Organização
+- `index.html`: estrutura das páginas
+- `src/css/style.css`: cores, responsividade e impressão
+- `src/js/core.js`: cadastro inicial, persistência e calendário
+- `src/js/escala.js`: geração de escalas
+- `src/js/interface.js`: tela e formulário de eventos
+- `src/js/validacao.js`: regras e validações
+- `src/js/equipe.js`: histórico e cadastro da equipe
+- `src/js/exportacao.js`: CSV e arquivos
+- `src/js/app.js`: eventos da interface e inicialização
+- `src/assets/`: logotipos
 
-## Desenvolvimento
-Projeto em estruturação. Antes de apresentar como versão estável, validar geração de escala, calendário, eventos especiais e exportação PDF/CSV.
+Os scripts são arquivos JavaScript tradicionais carregados em ordem com `defer`, preservando
+a compatibilidade com abertura offline via `file://`. Ainda compartilham estado global;
+a modularização é **incremental**, não uma arquitetura de módulos ES isolados.
 
-Criado para o Ministério Sementinhas Kids da Igreja Semear e Colher.
+## Atenção aos dados
+O repositório público usa uma equipe inicial vazia. Cadastre os voluntários no aplicativo; não publique seus backups JSON.
+
+Na versão navegador, o histórico é salvo no `localStorage` do navegador/computador.
+Ele **não acompanha o pendrive**. Faça exportação de backup JSON e restaure no outro computador.
+Nunca envie backups reais, históricos privados ou cadastros com informações pessoais para o GitHub.
+
+## Regras principais
+- Salas de domingo recebem professor e ajudante.
+- No segundo domingo, a última sala fica na Santa Ceia (Kids 3 ou Kids 4).
+- Jorge e Cinthia devem atuar no mesmo domingo, em salas diferentes.
+- Tita serve às terças com Michele.
+- Respeitar afastamentos, disponibilidade e preferências, verificando o resultado antes de aprovar.
+- Eventos especiais possuem sala e lição por professor.
+
+## Colaboração via GitHub
+1. Crie o repositório, preferencialmente **privado** durante os testes.
+2. Proteja a branch `main` e trabalhe em branches como `feat/eventos` ou `fix/escala`.
+3. Faça Pull Requests pequenos, explicando como testar.
+4. Nunca versionar `dados/`, `backups/` nem arquivos pessoais.
+5. Teste geração, edição dos eventos, exportação e histórico antes do merge.
+
+## Estado
+Esta é a reorganização inicial da v0.9, sem intenção de mudar regras. Os testes automatizados de interface
+ainda precisam ser adicionados. Não considere a validação manual dispensável.
