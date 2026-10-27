@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+coverage/
+*.log
+dados/
+backups/
+*.db
+*.sqlite
+.env
+.env.*
+.DS_Store
+Thumbs.db
