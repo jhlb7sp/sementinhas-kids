@@ -1,0 +1,9 @@
+{
+  "name": "sementinhas-kids",
+  "version": "0.9.1",
+  "private": true,
+  "scripts": {
+    "check": "node --test tests/*.test.cjs"
+  },
+  "license": "UNLICENSED"
+}
