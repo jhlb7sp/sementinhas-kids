@@ -111,3 +111,26 @@ Ao clicar **Aprovar e salvar**, **Exportar PDF**, **Exportar CSV** ou **Salvar e
 **Atenção:** eventos simples não registram horário. Por isso, se uma pessoa constar em salas diferentes no mesmo dia, mesmo em culto/eventos distintos, a duplicidade é tratada como conflito impeditivo. Nas programações por horário sem indicação de sala, a validação de sobreposição de horas permanece como aviso confirmável.
 
 O gerador automático ainda procura uma escala que respeite todas as regras e pode informar que não encontrou combinação. As exceções confirmadas são destinadas à **revisão manual e publicação** de uma escala editada.
+
+
+## Importação de ausências pelo Google Forms (CSV)
+Não é necessário hospedar o sistema. Os voluntários respondem ao Google Forms no celular; a liderança baixa as respostas pelo Google Planilhas e importa o CSV **localmente**, mesmo sem internet.
+
+**Preparar o Google Forms:**
+1. Pergunta de lista suspensa: **Qual é o seu nome?** (cadastrar os nomes da equipe).
+2. Pergunta de caixas de seleção: **Quais dias você NÃO poderá servir?** (usar opções no formato "Domingo — 13/12/2026", "Terça — 15/12/2026").
+3. Quem não tiver ausências **não precisa responder**.
+4. Abra a planilha vinculada → **Arquivo → Fazer download → Valores separados por vírgulas (.csv)**.
+
+**No Sementinhas Kids:** abra **Dados e backup → Importar ausências do Google Forms**; selecione o arquivo CSV; confira a prévia, os nomes identificados e as datas; ajuste manualmente nomes que não correspondem a nenhum voluntário; clique em **Confirmar importação**.
+
+- Um voluntário pode enviar respostas separadas, cada uma com uma data. O importador **reúne todas**.
+- Uma resposta pode conter **várias datas** marcadas. O leitor entende as vírgulas dentro de células entre aspas, conforme o padrão CSV do Google.
+- Datas repetidas no arquivo são unificadas; ausências já cadastradas (inclusive as **manuais**) não são alteradas ou duplicadas.
+- Se houver data impossível, coluna inesperada, nome sem correspondência ou resposta sem data, o sistema exige correção/associação na prévia.
+- Nomes são associados sem diferenciar maiúsculas, minúsculas ou acentos, mas **não** são associados por semelhança aproximada.
+- A importação é **aditiva**: não apaga ausências antigas. Caso um voluntário corrija ou cancele uma indisponibilidade já importada, remova a data antiga manualmente.
+- As ausências permanecem no backup JSON do Sementinhas Kids; o CSV original não é enviado a nenhum servidor pelo aplicativo. Os dados persistem no computador/navegador utilizado.
+- O gerador usa as ausências normalmente ao montar a escala.
+
+**Atenção:** a função de importação está no projeto com arquivos separados. Para distribuir a versão em HTML único é necessário **gerar novamente** esse HTML após a atualização (um arquivo HTML antigo não recebe novas funcionalidades sozinho).
