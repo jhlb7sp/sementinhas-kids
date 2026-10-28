@@ -118,3 +118,23 @@ td,th{padding:8px 7px}
   }
 }
 @media print{.conflict-marker{display:none!important}}
+
+
+/* Google Forms: importação local de respostas de disponibilidade */
+#formsImportPanel .panel{border-color:#c7e4d1;background:linear-gradient(180deg,#f5fcf4 0%,#fff 25%)}
+#formsImportPanel .forms-upload-row{display:flex;flex-direction:column;gap:6px;max-width:520px;margin:15px 0}
+#formsImportPanel input[type=file]{width:100%;padding:10px;border:1px dashed #90b8a6;border-radius:10px;background:#fff;font:inherit}
+#formsImportPanel .forms-import-summary{display:grid;grid-template-columns:repeat(5,minmax(95px,1fr));gap:8px;margin:14px 0}
+#formsImportPanel .forms-import-summary>div{padding:11px 9px;border:1px solid #cfe2d8;border-radius:10px;background:#f4faf7;text-align:center;display:flex;flex-direction:column;gap:4px}
+#formsImportPanel .forms-import-summary strong{font-size:22px;color:#24633e;line-height:1}
+#formsImportPanel .forms-import-summary span{font-size:11px;color:#52655f}
+#formsImportPanel .forms-import-table select{min-width:190px;max-width:260px;width:100%;font-size:13px}
+#formsImportPanel .forms-import-table small{display:block;font-size:11px;margin-top:4px}
+#formsImportPanel .forms-import-table th,#formsImportPanel .forms-import-table td{vertical-align:middle}
+#formsImportPanel .forms-date{display:inline-block;margin:2px;padding:4px 6px;border:1px solid #c6dcd5;border-radius:7px;background:#eff8f4;white-space:nowrap;font-size:12px}
+#formsImportPanel .forms-matched{color:#226b45}
+#formsImportPanel .forms-unmatched{color:#9b5313;font-weight:600}
+#formsImportPanel #formsImportApply{margin-top:12px}
+#formsImportPanel button:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:760px){#formsImportPanel .forms-import-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{#formsImportPanel{display:none!important}}
