@@ -138,3 +138,28 @@ td,th{padding:8px 7px}
 #formsImportPanel button:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:760px){#formsImportPanel .forms-import-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media print{#formsImportPanel{display:none!important}}
+
+
+/* Prévia simplificada: apenas voluntário e dias de ausência.
+   Só exibe seleção manual quando um nome não é reconhecido. */
+#formsImportPanel .forms-import-summary.forms-import-summary-simple{
+  grid-template-columns:repeat(3,minmax(110px,1fr));
+  max-width:760px;
+}
+#formsImportPanel .forms-import-table-simple{width:100%;table-layout:auto}
+#formsImportPanel .forms-import-table-simple th:first-child,
+#formsImportPanel .forms-import-table-simple td:first-child{width:30%;min-width:170px}
+#formsImportPanel .forms-import-table-simple td:last-child{min-width:270px}
+#formsImportPanel .forms-match-only{margin-top:8px;max-width:310px}
+#formsImportPanel .forms-match-only label{display:block;margin-top:6px;font-size:11px;color:#53645e}
+#formsImportPanel .forms-match-only select{margin-top:5px}
+#formsImportPanel .forms-restore-notice .actions{margin-top:10px;margin-bottom:7px}
+#formsImportPanel .forms-restore-notice small{display:block;line-height:1.4}
+@media(max-width:760px){
+  #formsImportPanel .forms-import-summary.forms-import-summary-simple{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  #formsImportPanel .forms-import-table-simple th:first-child,
+  #formsImportPanel .forms-import-table-simple td:first-child{min-width:120px}
+  #formsImportPanel .forms-import-table-simple td:last-child{min-width:180px}
+}
