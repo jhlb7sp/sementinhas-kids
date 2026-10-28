@@ -8,8 +8,9 @@ const root = path.join(__dirname, '..');
 const core = fs.readFileSync(path.join(root, 'src/js/core.js'), 'utf8');
 const validation = fs.readFileSync(path.join(root, 'src/js/validacao.js'), 'utf8');
 const configuredRules = fs.readFileSync(path.join(root, 'src/js/regras.js'), 'utf8');
+const blockingConflicts = fs.readFileSync(path.join(root, 'src/js/conflitos.js'), 'utf8');
 const ctx = vm.createContext({});
-vm.runInContext(core + '\n' + configuredRules + '\nglobalThis.rules={normalizePerson,canServeRoom,match,matchFlexible,cost};',ctx);
+vm.runInContext(core + '\n' + configuredRules + '\n' + blockingConflicts + '\nglobalThis.rules={normalizePerson,canServeRoom,match,matchFlexible,cost};',ctx);
 const {normalizePerson,canServeRoom,match,matchFlexible,cost}=ctx.rules;
 const mk=(id,p)=>({id,name:id,p,active:true,days:'D'});
 
@@ -47,17 +48,17 @@ test('uma pessoa pode repetir em domingos diferentes apenas nas suas salas permi
 test('proibição de todas as salas significa indisponível para domingos',()=>{
   assert.equal(match([{day:6,room:1}],[mk('Sem sala',[0,0,0,0])],{}),null);
 });
-test('validação rejeita escolha manual em sala não autorizada',()=>{
+test('validação avisa sobre escolha manual em sala não autorizada',()=>{
   vm.runInContext(validation+'\nglobalThis.check=validation;',ctx);
   vm.runInContext("db.teachers=[{id:'t_v',name:'Vanessa',p:[1,0,0,0],active:true,days:'D'}];db.helpers=[{id:'h_x',name:'Auxiliar',p:[2,0,0,0],active:true,days:'D'}];",ctx);
   vm.runInContext('function validatePrograms(){return []}',ctx);
   const draft={year:2026,month:11,rooms:3,santa:false,sundays:[6],tuesdays:[],
     sunday:[{day:6,room:2,teacher:'t_v',helper:'h_x'}],tuesday:[],events:[],programs:[]};
   const out=ctx.check(draft);
-  assert.ok(Array.from(out.errors).some(e=>e.includes('Vanessa não pode atuar no Kids 2')));
+  assert.ok(Array.from(out.warnings).some(e=>e.includes('Vanessa não pode atuar no Kids 2')));
 });
-test('escolha manual proibida também é rejeitada em evento com sala',()=>{
+test('escolha manual fora das preferências também gera aviso no evento',()=>{
   const draft={year:2026,month:11,rooms:3,santa:false,sundays:[],tuesdays:[],sunday:[],tuesday:[],programs:[],
     events:[{title:'Teste',date:'2026-12-10',staff:[{teacher:'t_v',helper:'h_x',room:2,lesson:''}]}]};
-  assert.ok(Array.from(ctx.check(draft).errors).some(e=>e.includes('Vanessa não pode atuar no Kids 2')));
+  assert.ok(Array.from(ctx.check(draft).warnings).some(e=>e.includes('Vanessa não pode atuar no Kids 2')));
 });

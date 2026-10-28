@@ -98,3 +98,16 @@ A contagem dos limites considera **dias distintos de serviço** no mês, somando
 **Escopo atual dos vínculos:** o vínculo entre dois professores se aplica aos **domingos**; a dupla professor-ajudante é obrigatória nas **terças**. Ausências e limites mensais também são verificados nos eventos. Programações por horários mantêm a possibilidade de vários voluntários por atividade.
 
 Recomenda-se salvar um backup JSON antes de atualizar a versão e validar algumas escalas reais após o merge.
+
+
+## Avisos confirmáveis e conflitos impeditivos
+Na escala, existem **dois níveis** de inconsistência:
+
+1. **Impeditivo (vermelho):** o **mesmo professor ou ajudante** está em **salas Kids diferentes na mesma data**. O sistema destaca os campos envolvidos, informa nome, salas e dia, e impede aprovar a escala e exportar PDF/CSV até a correção. A verificação considera domingos e eventos simples, inclusive entre culto e evento no mesmo dia.
+2. **Aviso confirmável:** os demais descumprimentos — por exemplo, Jorge e Cinthia em domingos diferentes, ausência em uma data, limite mensal ou preferência de sala não seguida — podem ser mantidos **com confirmação explícita** da liderança.
+
+Ao clicar **Aprovar e salvar**, **Exportar PDF**, **Exportar CSV** ou **Salvar evento/programação**, a confirmação lista até dez avisos e pergunta se deseja continuar mesmo assim. Clicar **Cancelar** não publica nem exporta. O rascunho continua salvo automaticamente para permitir ajustes.
+
+**Atenção:** eventos simples não registram horário. Por isso, se uma pessoa constar em salas diferentes no mesmo dia, mesmo em culto/eventos distintos, a duplicidade é tratada como conflito impeditivo. Nas programações por horário sem indicação de sala, a validação de sobreposição de horas permanece como aviso confirmável.
+
+O gerador automático ainda procura uma escala que respeite todas as regras e pode informar que não encontrou combinação. As exceções confirmadas são destinadas à **revisão manual e publicação** de uma escala editada.
