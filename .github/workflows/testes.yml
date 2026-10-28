@@ -1,0 +1,22 @@
+name: Testes do Sementinhas Kids
+
+on:
+  push:
+    branches: ["main", "feat/**", "fix/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter arquivos
+        uses: actions/checkout@v4
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Executar testes
+        run: npm run check
