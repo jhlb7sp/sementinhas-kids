@@ -142,7 +142,7 @@ test('interface importa somente após confirmação e preserva ausência manual 
   const elements={};
   const events={};
   for(const id of ['formsImportPanel','formsImportCsv','formsImportStatus','formsImportPreview'])
-    elements[id]={innerHTML:'',className:'',textContent:'',value:'',files:[],
+    elements[id]={id,innerHTML:'',className:'',textContent:'',value:'',files:[],
       addEventListener(name,cb){events[name]=cb}};
   const state={
     teachers:people.slice(0,3),
