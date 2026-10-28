@@ -106,3 +106,25 @@ test('validação identifica ausência em evento especial e limite excedido',()=
  assert.ok(errors.some(e=>e.includes('ausente')));
  assert.ok(errors.some(e=>e.includes('excedeu limite')));
 });
+
+test('ajudante preferencial participa em uma terça, não em todas',()=>{
+ const teacher=person('Michele','mi',[1,2,3,4],'T');
+ const felipe=person('Felipe','fe',[1,2,3,4],'T');
+ setup({teachers:[teacher],helpers:[felipe],tuesdays:[1,8,15]});
+ vm.runInContext("rulesConfig().preferredTuesdayHelper={enabled:true,id:'fe'}",context);
+ const draft=context.api.buildConfiguredScale();
+ assert.equal(draft.tuesday.filter(s=>s.helper==='fe').length,1);
+});
+test('ausência em evento de outro mês é detectada',()=>{
+ setup({teachers,helpers,absences:[{id:'out',person:'v',date:'2027-01-02'}]});
+ const draft={key:'2026-12',year:2026,month:11,sunday:[],tuesday:[],events:[{title:'Retiro',date:'2027-01-02',staff:[{teacher:'v',helper:null,room:1}]}],programs:[]};
+ assert.ok(Array.from(context.api.validateConfiguredRules(draft)).some(e=>e.includes('2027-01-02')));
+});
+test('duas atividades no mesmo dia contam uma participação para limites mensais',()=>{
+ setup({teachers,helpers,limits:{teachers:1}});
+ const draft={key:'2026-12',year:2026,month:11,sunday:[],tuesday:[],events:[],programs:[{days:[{date:'2026-12-06',slots:[{teachers:['j'],helpers:[]},{teachers:['j'],helpers:[]}]}]}]};
+ assert.equal(context.api.collectUsage(draft).get('j').size,1);
+ assert.deepEqual(Array.from(context.api.validateConfiguredRules(draft)),[]);
+ draft.programs[0].days.push({date:'2026-12-07',slots:[{teachers:['j'],helpers:[]}]});
+ assert.ok(Array.from(context.api.validateConfiguredRules(draft)).some(e=>e.includes('excedeu limite')));
+});
