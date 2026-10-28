@@ -133,4 +133,6 @@ Não é necessário hospedar o sistema. Os voluntários respondem ao Google Form
 - As ausências permanecem no backup JSON do Sementinhas Kids; o CSV original não é enviado a nenhum servidor pelo aplicativo. Os dados persistem no computador/navegador utilizado.
 - O gerador usa as ausências normalmente ao montar a escala.
 
+**Prévia simplificada:** normalmente mostra apenas **Voluntário** e **Datas em que NÃO poderá servir**; os nomes já cadastrados são associados automaticamente. Um seletor aparece somente em casos excepcionais de nome não reconhecido. Se este navegador estiver sem equipe, use **Restaurar backup da equipe** antes de confirmar a importação (a equipe e suas regras não podem ser recuperadas somente pelo CSV).
+
 **Atenção:** a função de importação está no projeto com arquivos separados. Para distribuir a versão em HTML único é necessário **gerar novamente** esse HTML após a atualização (um arquivo HTML antigo não recebe novas funcionalidades sozinho).
