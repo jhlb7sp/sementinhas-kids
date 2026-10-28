@@ -38,6 +38,33 @@ function blockingRoomConflicts(draft){
     }
     inspect(entries,{type:'event',eventIndex,title:ev.title||'sem título',date:ev.date||''});
   }
+  // Também verifica cultos e eventos diferentes que tenham a mesma data.
+  // Nos eventos simples não há horário: por segurança, duas salas no mesmo dia são incompatíveis.
+  const byDate=new Map();
+  function addDate(date,entry){
+    if(!date||!entry.id||!Number.isInteger(+entry.room)||+entry.room<1||+entry.room>4)return;
+    const list=byDate.get(date)||[];list.push({...entry,room:+entry.room});byDate.set(date,list);
+  }
+  for(const slot of draft.sunday||[])for(const kind of ['teacher','helper'])
+    addDate(draft.year+'-'+String(draft.month+1).padStart(2,'0')+'-'+String(slot.day).padStart(2,'0'),
+      {origin:'sunday',day:slot.day,id:slot[kind],kind,room:slot.room});
+  for(const [eventIndex,ev] of (draft.events||[]).entries())
+    for(const [staffIndex,slot] of (ev.staff||[]).entries())
+      for(const kind of ['teacher','helper'])
+        addDate(ev.date,{origin:'event',eventIndex,staffIndex,id:slot[kind],kind,room:slot.room});
+  for(const [date,entries] of byDate){
+    const byId=new Map();
+    for(const entry of entries){const group=byId.get(entry.id)||[];group.push(entry);byId.set(entry.id,group)}
+    for(const [id,rows] of byId){
+      const crossing=rows.some(a=>rows.some(b=>a.room!==b.room&&
+        (a.origin!==b.origin||a.eventIndex!==b.eventIndex)));
+      if(!crossing)continue;
+      const rooms=[...new Set(rows.map(e=>e.room))].sort((a,b)=>a-b);
+      conflicts.push({type:'mixed',date,id,rooms,entries:rows,
+        message:(typeof person==='function'?person(id):id)+' está em '+rooms.map(n=>'Kids '+n).join(' e ')+
+          ' no mesmo dia '+date.split('-').reverse().join('/')+' (culto/eventos diferentes).'});
+    }
+  }
   return conflicts;
 }
 function markBlockingFields(){
@@ -55,17 +82,18 @@ function markBlockingFields(){
   const conflicts=blockingRoomConflicts(db.draft),marked=new Map();
   for(const conflict of conflicts)for(const entry of conflict.entries){
     let select;
-    if(conflict.type==='sunday')
-      select=document.querySelector(`select[data-section="sunday"][data-day="${conflict.day}"][data-room="${entry.room}"][data-kind="${entry.kind}"]`);
+    const isSunday=entry.origin==='sunday'||conflict.type==='sunday';
+    if(isSunday)
+      select=document.querySelector(`select[data-section="sunday"][data-day="${entry.day??conflict.day}"][data-room="${entry.room}"][data-kind="${entry.kind}"]`);
     else
-      select=document.querySelector(`#eventEditor select[data-event="${conflict.eventIndex}"][data-staff="${entry.staffIndex}"][data-role="${entry.kind}"]`);
+      select=document.querySelector(`#eventEditor select[data-event="${entry.eventIndex??conflict.eventIndex}"][data-staff="${entry.staffIndex}"][data-role="${entry.kind}"]`);
     if(!select||select.value!==conflict.id)continue;
     select.classList.add('schedule-blocking');
     select.setAttribute('aria-invalid','true');
     if(select.dataset.originalTitle===undefined)select.dataset.originalTitle=select.title||'';
     select.title=conflict.message+' Corrija um dos campos destacados em vermelho.';
     let area;
-    if(conflict.type==='sunday'){
+    if(isSunday){
       area=select.closest('td');
       area?.classList.add('conflict-cell');
     }else{
