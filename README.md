@@ -47,3 +47,20 @@ Nunca envie backups reais, históricos privados ou cadastros com informações p
 ## Estado
 Esta é a reorganização inicial da v0.9, sem intenção de mudar regras. Os testes automatizados de interface
 ainda precisam ser adicionados. Não considere a validação manual dispensável.
+
+
+## Programações especiais por horários
+Em **Gerar escala → Eventos especiais**, use **Nova programação por horários** para eventos como o Encontro com Deus.
+
+- Informe o título do evento e acrescente quantos **dias** precisar.
+- Em cada dia, acrescente **atividades com hora de início, hora de fim e tema**.
+- Cada atividade aceita **vários professores e ajudantes**, cadastrados pela equipe.
+- Escolha **Aula / atividade**, **Troca de equipe** ou **Intervalo / pausa**.
+- A impressão agrupa as atividades por dia, mostrando horário, tema e equipes.
+- O CSV inclui as linhas das programações com horário e tema.
+- A aprovação valida horários, equipe inativa, voluntários duplicados e sobreposição de horários.
+- O histórico registra uma participação por pessoa e dia do evento, não uma por atividade.
+
+A programação pode ser criada sem gerar a escala mensal. Os eventos simples existentes continuam disponíveis.
+
+**Limitação:** os testes automatizados atuais cobrem as regras do cronograma, mas não substituem a conferência visual no Chrome/Edge antes de entregar à liderança.
