@@ -21,6 +21,7 @@ function prepare(){
   };
   ctx.inputData=data;
   vm.runInContext('db=normalizeDb(inputData)',ctx);
+  ctx.structuredClone=structuredClone;
   ctx.captureEventForm=()=>{};
   ctx.persist=()=>{};
   ctx.renderHistory=()=>{};
