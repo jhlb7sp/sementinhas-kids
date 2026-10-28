@@ -53,14 +53,14 @@ function copyUsage(usage){
   return result;
 }
 function markUsage(usage,id,date){if(!id)return;let dates=usage.get(id);if(!dates){dates=new Set();usage.set(id,dates)}dates.add(date)}
-function collectUsage(draft,{onlyExtras=false}={}){
+function collectUsage(draft,{onlyExtras=false,includeOtherMonths=false}={}){
   const result=new Map(),year=draft.year,month=draft.month,prefix=year+'-'+String(month+1).padStart(2,'0')+'-';
   if(!onlyExtras){
     for(const slot of draft.sunday||[])for(const id of [slot.teacher,slot.helper])markUsage(result,id,isoMonth(year,month,slot.day));
     for(const slot of draft.tuesday||[])for(const id of [slot.teacher,slot.helper])markUsage(result,id,isoMonth(year,month,slot.day));
   }
-  for(const event of draft.events||[])if(event.date?.startsWith(prefix))for(const entry of event.staff||[])for(const id of [entry.teacher,entry.helper])markUsage(result,id,event.date);
-  for(const pr of draft.programs||[])for(const day of pr.days||[])if(day.date?.startsWith(prefix))for(const slot of day.slots||[])for(const id of [...(slot.teachers||[]),...(slot.helpers||[])])markUsage(result,id,day.date);
+  for(const event of draft.events||[])if(event.date&&(includeOtherMonths||event.date.startsWith(prefix)))for(const entry of event.staff||[])for(const id of [entry.teacher,entry.helper])markUsage(result,id,event.date);
+  for(const pr of draft.programs||[])for(const day of pr.days||[])if(day.date&&(includeOtherMonths||day.date.startsWith(prefix)))for(const slot of day.slots||[])for(const id of [...(slot.teachers||[]),...(slot.helpers||[])])markUsage(result,id,day.date);
   return result;
 }
 function enabledRules(type){return rulesConfig().rules.filter(r=>r.enabled&&r.type===type)}
@@ -89,7 +89,7 @@ function minCostAssign(slots,available,used,stats,year,month,forbidden=new Set()
     const availableCapacity=limit?Math.max(0,limit-count):slots.length;
     if(!availableCapacity)continue;
     const pn=node();personNodes.set(p.id,pn);
-    for(let n=0;n<Math.min(availableCapacity,slots.length);n++)edge(source,pn,1,Math.max(0,count+n-1)*80);
+    for(let n=0;n<Math.min(availableCapacity,slots.length);n++)edge(source,pn,1,Math.max(0,count+n)*80);
     for(const day of [...new Set(slots.map(s=>s.day))]){
       const date=isoMonth(year,month,day);
       if(!canTakeAnother(p.id,used,date))continue;
@@ -184,7 +184,7 @@ function planTuesday(dayNumbers,usage,year,month){
     const chosen=candidates[0];
     if(!chosen)throw Error('Não há professor disponível na terça '+date+' respeitando ausências, vínculos e limites mensais.');
     let helper=chosen.partner;
-    if(!helper&&preferred?.enabled&&preferred.id){
+    if(!helper&&preferred?.enabled&&preferred.id&&!out.some(s=>s.helper===preferred.id)){
       const preferredPerson=helpers.find(h=>h.id===preferred.id);
       if(preferredPerson&&canTakeAnother(preferredPerson.id,usage,date)&&!pairs.some(r=>r.b===preferredPerson.id&&r.a!==chosen.teacher.id))helper=preferredPerson;
     }
@@ -222,7 +222,7 @@ function buildConfiguredScale(){
   return draft;
 }
 function validateConfiguredRules(draft){
-  const errors=[],monthKey=draft.key||draft.year+'-'+String(draft.month+1).padStart(2,'0'),rc=rulesConfig(),usage=collectUsage(draft);
+  const errors=[],rc=rulesConfig(),usage=collectUsage(draft,{includeOtherMonths:true});
   for(const r of rc.rules.filter(r=>r.enabled)){
     const a=findVolunteer(r.a),b=findVolunteer(r.b);
     if(!a||!b||!a.active||!b.active){errors.push('Regra ativa com voluntário afastado/excluído: '+(a?.name||r.a)+' / '+(b?.name||r.b));continue}
@@ -237,8 +237,9 @@ function validateConfiguredRules(draft){
   }
   for(const [id,dates] of usage){
     const p=findVolunteer(id);
-    const cap=monthlyLimit(id),inMonth=[...dates].filter(d=>d.startsWith(monthKey+'-'));
-    if(cap&&inMonth.length>cap)errors.push((p?.name||id)+' excedeu limite: '+inMonth.length+' de '+cap+' participações no mês.');
+    const cap=monthlyLimit(id),byMonth=new Map();
+    for(const date of dates)if(validIsoDate(date))byMonth.set(date.slice(0,7),(byMonth.get(date.slice(0,7))||0)+1);
+    for(const [month,count] of byMonth)if(cap&&count>cap)errors.push((p?.name||id)+' excedeu limite em '+month+': '+count+' de '+cap+' participações.'];
     for(const date of dates)if(isAbsent(id,date))errors.push((p?.name||id)+' está ausente em '+date+'.');
   }
   return errors;
