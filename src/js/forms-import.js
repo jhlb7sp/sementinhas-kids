@@ -121,7 +121,7 @@ function formsMakePlan(parsed,people,absences,overrides={}){
   });
   return {groups,newItems,alreadyCount,missing,issues:parsed.issues};
 }
-function formsDateLabel(iso){return iso.slice(8,10)+'/'+iso.slice(5,7)}
+function formsDateLabel(iso){return iso.slice(8,10)+'/'+iso.slice(5,7)+'/'+iso.slice(0,4)}
 function renderFormsImport(){
   const panel=$('formsImportPanel');if(!panel)return;
   panel.innerHTML=
@@ -218,7 +218,7 @@ function initFormsImport(){
       }catch(err){formsImportMessage('Não foi possível ler o CSV: '+err.message,'error')}
       return;
     }
-    if(input.dataset.formsMap!==undefined&&formsImportState){
+    if(input.dataset&&input.dataset.formsMap!==undefined&&formsImportState){
       const group=formsImportState.parsed.groups[Number(input.dataset.formsMap)];
       if(!group)return;
       formsImportState.overrides[group.key]=input.value;
