@@ -8,8 +8,9 @@ const root = path.join(__dirname, '..');
 const core = fs.readFileSync(path.join(root, 'src/js/core.js'), 'utf8');
 const validation = fs.readFileSync(path.join(root, 'src/js/validacao.js'), 'utf8');
 const configuredRules = fs.readFileSync(path.join(root, 'src/js/regras.js'), 'utf8');
+const blockingConflicts = fs.readFileSync(path.join(root, 'src/js/conflitos.js'), 'utf8');
 const ctx = vm.createContext({});
-vm.runInContext(core + '\n' + configuredRules + '\nglobalThis.rules={normalizePerson,canServeRoom,match,matchFlexible,cost};',ctx);
+vm.runInContext(core + '\n' + configuredRules + '\n' + blockingConflicts + '\nglobalThis.rules={normalizePerson,canServeRoom,match,matchFlexible,cost};',ctx);
 const {normalizePerson,canServeRoom,match,matchFlexible,cost}=ctx.rules;
 const mk=(id,p)=>({id,name:id,p,active:true,days:'D'});
 
