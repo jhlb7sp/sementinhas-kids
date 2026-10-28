@@ -42,3 +42,37 @@ td,th{padding:8px 7px}
  .wrap{margin:0}
  .panel{padding:0}
 }
+
+/* Programação de eventos de vários dias com atividades por horário */
+.program-start{margin-top:18px;border-top:1px dashed #d6e7e5;padding-top:8px}
+.program-list{display:grid;gap:15px;margin-top:12px}
+.program-card{border:2px solid #bee3ee;background:linear-gradient(165deg,#f1faff,#fffaf1);border-radius:15px;padding:14px}
+.program-heading,.program-day-head,.program-slot-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.program-day{border:1px solid #b9d8d3;background:white;border-radius:12px;padding:12px;margin:12px 0}
+.program-day-head label{min-width:210px}
+.program-slot{background:#fff9ed;border:1px solid #f1dcb8;border-radius:12px;padding:12px;margin:12px 0}
+.program-meta{display:grid;grid-template-columns:repeat(3,minmax(90px,1fr));gap:10px;margin-bottom:10px}
+.program-slot textarea{font:inherit;border:1px solid #b9d1d0;border-radius:8px;padding:8px;width:100%;resize:vertical;min-height:65px}
+.program-team{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:10px 0}
+.program-members{display:flex;flex-direction:column;gap:7px}
+.program-member{display:flex;gap:5px;align-items:center}
+.program-member select{min-width:0;flex:1}
+.program-title-input{max-width:550px}
+.program-print{margin:20px 0}
+.program-title{background:#91d879;color:#173f1b;text-align:center;padding:8px;border-radius:4px;margin:0!important}
+.program-print-day h4{background:#ffc634;color:#342100;text-align:center;padding:8px;margin:0;font-size:16px}
+.program-print-day table{margin-bottom:16px}
+.program-print-day td:first-child{white-space:nowrap;font-weight:700;width:14%}
+.program-print-day td:nth-child(2){width:40%}
+.program-break{background:#fff6a0;font-weight:700;text-align:center}
+.program-change{background:#fff9af;font-weight:700}
+.program-print-day{break-inside:avoid;page-break-inside:avoid;margin-top:10px}
+.program-print-day thead{display:table-header-group}
+@media(max-width:780px){.program-meta{grid-template-columns:repeat(2,minmax(0,1fr))}.program-team{grid-template-columns:1fr}}
+@media print{
+.program-list,.program-start{display:none!important}
+.program-print{break-before:page}
+.program-print-day{break-inside:auto}
+.program-print-day tr{break-inside:avoid}
+.program-print-day h4,.program-title,.program-break,.program-change{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
