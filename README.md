@@ -64,3 +64,16 @@ Em **Gerar escala → Eventos especiais**, use **Nova programação por horário
 A programação pode ser criada sem gerar a escala mensal. Os eventos simples existentes continuam disponíveis.
 
 **Limitação:** os testes automatizados atuais cobrem as regras do cronograma, mas não substituem a conferência visual no Chrome/Edge antes de entregar à liderança.
+
+
+## Prioridades e restrições de salas (PR #2)
+No cadastro de cada professor ou ajudante, escolha apenas as salas em que a pessoa **pode** atuar, na ordem de preferência.
+
+- **1ª prioridade — Kids 1; 2ª/3ª/4ª — Não atua:** essa pessoa pode ser escalada **somente no Kids 1**.
+- Os campos **Não atua** são proibições de sala; não são apenas preferências menos importantes.
+- O gerador usa somente pessoas autorizadas e apresenta erro quando não consegue preencher todas as salas.
+- A validação também bloqueia atribuições manuais em salas não permitidas, inclusive nos eventos simples com sala.
+- Backups antigos preservam as opções que já estão vazias, sem completá-las automaticamente.
+- Não é permitido repetir a mesma sala em duas posições de prioridade.
+
+**Importante:** salve um backup antes de alterar muitas preferências. Programações especiais por horários sem campo de sala seguem suas próprias regras; essas restrições de Kids 1–4 aplicam-se à escala de salas e aos eventos simples com sala.
