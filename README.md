@@ -77,3 +77,24 @@ No cadastro de cada professor ou ajudante, escolha apenas as salas em que a pess
 - Não é permitido repetir a mesma sala em duas posições de prioridade.
 
 **Importante:** salve um backup antes de alterar muitas preferências. Programações especiais por horários sem campo de sala seguem suas próprias regras; essas restrições de Kids 1–4 aplicam-se à escala de salas e aos eventos simples com sala.
+
+
+## Configuração de regras e ausências
+Acesse **Dados e backup → Regras de escala e disponibilidade** para ajustar as restrições sem modificar JavaScript.
+
+- **Vínculo de dois professores:** ambos ministram no mesmo domingo, em salas diferentes. É possível cadastrar vários pares, como Matheus/Jhenifer, além dos já existentes.
+- **Dupla de terça:** professor e ajudante precisam atuar juntos quando qualquer um deles for escalado na terça.
+- **Ativar/desativar:** regras com vínculo podem ser desligadas temporariamente sem excluir os cadastros.
+- **Máximo por mês:** configure valor padrão para professores e ajudantes; opcionalmente, um valor individual substitui o padrão. **0 = sem limite**.
+- **Ausências por data:** escolha voluntário e dia exato; a pessoa continuará disponível nas outras datas.
+- **Ajudante preferencial de terça:** escolha uma pessoa e habilite a preferência. O gerador tentará incluí-la em **uma terça**, desde que possível.
+
+A contagem dos limites considera **dias distintos de serviço** no mês, somando cultos e eventos. Dois períodos do mesmo evento no mesmo dia contam uma participação; sábado e domingo contam duas.
+
+**Regras de migração:** quando o cadastro anterior contiver Jorge/Cinthia, Michele/Tita e Felipe, as regras anteriores são transformadas em configurações (e podem ser desabilitadas). As regras usam IDs dos cadastros, portanto continuam válidas após renomear alguém. Backups JSON armazenam as configurações.
+
+**Conflitos:** se não houver professores ou ajudantes suficientes, ou uma regra impedir preencher as salas, o gerador mostra um erro e não aprova uma escala inválida. PDF e CSV também são bloqueados se a validação identificar conflito.
+
+**Escopo atual dos vínculos:** o vínculo entre dois professores se aplica aos **domingos**; a dupla professor-ajudante é obrigatória nas **terças**. Ausências e limites mensais também são verificados nos eventos. Programações por horários mantêm a possibilidade de vários voluntários por atividade.
+
+Recomenda-se salvar um backup JSON antes de atualizar a versão e validar algumas escalas reais após o merge.
