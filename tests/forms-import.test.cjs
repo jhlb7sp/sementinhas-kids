@@ -161,7 +161,7 @@ test('interface importa somente após confirmação e preserva ausência manual 
   context.api.initFormsImport();
   elements.formsImportCsv.files=[{size:sample.length,text:async()=>sample}];
   await events.change({target:elements.formsImportCsv});
-  assert.match(elements.formsImportPreview.innerHTML,/Confirmar importação de 5 ausência/);
+  assert.match(elements.formsImportPreview.innerHTML,/Registrar 5 ausência/);
   events.click({target:{id:'formsImportApply'}});
   assert.equal(state.rulesConfig.absences.length,1);
   confirmed=true;
@@ -171,4 +171,64 @@ test('interface importa somente após confirmação e preserva ausência manual 
   assert.equal(saved,1);
   assert.equal(refreshed,1);
   assert.match(elements.formsImportStatus.textContent,/5 ausência/);
+});
+
+
+function previewFixture(team=people){
+  const context=setup(),elements={},events={};
+  for(const id of ['formsImportPanel','formsImportCsv','formsImportStatus','formsImportPreview'])
+    elements[id]={id,innerHTML:'',className:'',textContent:'',value:'',files:[],
+      addEventListener(name,callback){events[name]=callback}};
+  let restoreClicked=0;
+  elements.restoreButton={click(){restoreClicked++}};
+  const state={
+    teachers:team.filter(x=>x.id.startsWith('t')),
+    helpers:team.filter(x=>x.id.startsWith('h')),
+    rulesConfig:{absences:[]}
+  };
+  context.db=state;
+  context.$=id=>elements[id];
+  context.rulesConfig=()=>state.rulesConfig;
+  context.persist=()=>{};
+  context.renderRuleUi=()=>{};
+  context.esc=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
+  context.confirm=()=>true;
+  context.api.initFormsImport();
+  elements.formsImportCsv.files=[{size:sample.length,text:async()=>sample}];
+  return {context,elements,events,getRestores:()=>restoreClicked};
+}
+test('prévia simples exibe somente colunas Voluntário e Datas e não exige seletores quando equipe existe',async()=>{
+  const f=previewFixture();
+  await f.events.change({target:f.elements.formsImportCsv});
+  const content=f.elements.formsImportPreview.innerHTML;
+  assert.match(content,/<th>Voluntário<\/th><th>Datas em que NÃO poderá servir<\/th>/);
+  assert.doesNotMatch(content,/Correspondência no cadastro|<th>Novas<\/th>/);
+  assert.doesNotMatch(content,/data-forms-map=/);
+  assert.match(content,/Jorge/);
+  assert.match(content,/13\/12\/2026/);
+  assert.match(content,/20\/12\/2026/);
+  assert.match(content,/Registrar 6 ausência/);
+});
+test('sem voluntários cadastrados, mostra datas lidas e botão de restaurar backup; bloqueia importação',async()=>{
+  const f=previewFixture([]);
+  await f.events.change({target:f.elements.formsImportCsv});
+  const content=f.elements.formsImportPreview.innerHTML;
+  assert.match(content,/Catarina/);
+  assert.match(content,/06\/12\/2026/);
+  assert.match(content,/a equipe está vazia neste navegador/);
+  assert.match(content,/id="formsRestoreTeam"/);
+  assert.match(content,/id="formsImportApply" class="primary" disabled/);
+  assert.doesNotMatch(content,/data-forms-map=/);
+  f.events.click({target:{id:'formsRestoreTeam'}});
+  assert.equal(f.getRestores(),1);
+});
+test('se apenas um nome não for reconhecido, seletor aparece somente nessa linha',async()=>{
+  const otherTeam=people.filter(x=>x.name!=='Catarina');
+  const f=previewFixture(otherTeam);
+  await f.events.change({target:f.elements.formsImportCsv});
+  const content=f.elements.formsImportPreview.innerHTML;
+  assert.equal((content.match(/data-forms-map=/g)||[]).length,1);
+  assert.match(content,/Nome não encontrado no cadastro/);
+  assert.match(content,/Associe apenas esses nomes ao cadastro correto/);
+  assert.match(content,/id="formsImportApply" class="primary" disabled/);
 });

@@ -139,60 +139,68 @@ function renderFormsImport(){
     '</div>';
 }
 function renderFormsImportPreview(){
-  const target=$('formsImportPreview');
-  if(!target)return;
+  const target=$('formsImportPreview');if(!target)return;
   if(!formsImportState){target.innerHTML='';return}
   const people=[...db.teachers,...db.helpers];
   const plan=formsMakePlan(formsImportState.parsed,people,rulesConfig().absences,formsImportState.overrides);
-  const currentData=formsImportState.parsed;
-  const selectedCount=plan.groups.reduce((n,g)=>n+g.dates.length,0);
-  const opts=[...people].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(p=>
-    '<option value="'+esc(p.id)+'">'+esc(p.name)+' — '+(db.teachers.some(t=>t.id===p.id)?'Professor':'Ajudante')+
-    (p.active?'':' (afastado)')+'</option>').join('');
+  const source=formsImportState.parsed;
+  const absenceCount=plan.groups.reduce((n,g)=>n+g.dates.length,0);
+  const availableOptions=[...people].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
   let output=
-    '<h3>Prévia da importação</h3>'+
-    '<div class="forms-import-summary">'+
-      '<div><strong>'+currentData.totalResponses+'</strong><span>Respostas</span></div>'+
+    '<h3>Confira as ausências</h3>'+
+    '<p class="mini">O sistema juntou automaticamente as respostas da mesma pessoa e as datas informadas. '+
+    'Você só precisa conferir e confirmar.</p>'+
+    '<div class="forms-import-summary forms-import-summary-simple">'+
       '<div><strong>'+plan.groups.length+'</strong><span>Voluntários</span></div>'+
-      '<div><strong>'+selectedCount+'</strong><span>Ausências únicas no CSV</span></div>'+
-      '<div><strong>'+plan.newItems.length+'</strong><span>Novas ausências</span></div>'+
-      '<div><strong>'+plan.alreadyCount+'</strong><span>Já cadastradas</span></div>'+
+      '<div><strong>'+absenceCount+'</strong><span>Datas de ausência</span></div>'+
+      '<div><strong>'+plan.newItems.length+'</strong><span>Novas para registrar</span></div>'+
     '</div>';
-  if(currentData.duplicatesInCsv)
-    output+='<p class="mini">♻️ '+currentData.duplicatesInCsv+' data(s) repetida(s) no CSV foram agrupadas automaticamente.</p>';
+  if(source.duplicatesInCsv)
+    output+='<p class="mini">♻️ '+source.duplicatesInCsv+' data(s) repetida(s) foram reunidas automaticamente.</p>';
   if(plan.issues.length)
-    output+='<div class="info error"><b>Corrija o CSV antes de importar:</b><ul>'+
-      plan.issues.slice(0,12).map(s=>'<li>'+esc(s)+'</li>').join('')+
+    output+='<div class="info error"><b>Existem respostas que precisam de correção no arquivo:</b><ul>'+
+      plan.issues.slice(0,12).map(issue=>'<li>'+esc(issue)+'</li>').join('')+
       (plan.issues.length>12?'<li>… e mais '+(plan.issues.length-12)+' linha(s).</li>':'')+
       '</ul></div>';
-  if(!people.length)
-    output+='<div class="info warn">Nenhum voluntário cadastrado neste navegador. Cadastre a equipe ou restaure o backup JSON primeiro.</div>';
-  output+='<div class="tablewrap"><table class="forms-import-table"><thead><tr>'+
-    '<th>Nome no formulário</th><th>Correspondência no cadastro</th><th>Datas informadas</th><th>Novas</th>'+
+  if(!people.length){
+    output+='<div class="info warn forms-restore-notice"><b>A planilha foi lida, mas a equipe está vazia neste navegador.</b> '+
+      'Para registrar as ausências na escala, primeiro restaure o backup JSON com os cadastros '+
+      '(ou cadastre a equipe). O CSV sozinho não contém os dados de professores, ajudantes e salas.'+
+      '<div class="actions"><button type="button" id="formsRestoreTeam" class="primary">⬆️ Restaurar backup da equipe</button></div>'+
+      '<small>Após a restauração, selecione o CSV novamente. As respostas não serão perdidas no Google Planilhas.</small></div>';
+  }
+  output+='<div class="tablewrap"><table class="forms-import-table forms-import-table-simple"><thead><tr>'+
+    '<th>Voluntário</th><th>Datas em que NÃO poderá servir</th>'+
     '</tr></thead><tbody>';
   for(const [i,g] of plan.groups.entries()){
-    output+='<tr><td><strong>'+esc(g.name)+'</strong>'+
-      (g.responses>1?'<br><small>'+g.responses+' respostas reunidas</small>':'')+'</td>'+
-      '<td><select data-forms-map="'+i+'" aria-label="Relacionar '+esc(g.name)+' ao cadastro">'+
-      '<option value="">— Selecione o voluntário —</option>'+
-      opts.replace(/<option value="([^"]+)"/g,(all,id)=>'<option value="'+id+'"'+(id===g.id?' selected':'') )+
-      '</select>'+
-      (!g.id?'<small class="forms-unmatched">⚠️ Nome ainda não vinculado ao cadastro</small>':
-        !g.active?'<small class="forms-unmatched">Voluntário afastado</small>':
-        '<small class="forms-matched">✓ Cadastro identificado</small>')+'</td>'+
-      '<td>'+g.dates.map(d=>'<span class="forms-date">'+esc(formsDateLabel(d))+'</span>').join(' ')+'</td>'+
-      '<td>'+(g.id?g.fresh+' nova(s)'+(g.existing?' · '+g.existing+' já cadastrada(s)':''):'—')+'</td></tr>';
+    output+='<tr><td><strong>'+esc(g.name)+'</strong>';
+    if(g.responses>1)output+='<small>'+g.responses+' respostas reunidas</small>';
+    if(people.length&&!g.id){
+      output+='<div class="forms-match-only"><small class="forms-unmatched">⚠️ Nome não encontrado no cadastro</small>'+
+        '<label for="formsPerson'+i+'">Corrigir associação (somente se necessário)</label>'+
+        '<select id="formsPerson'+i+'" data-forms-map="'+i+'" aria-label="Associar '+esc(g.name)+' ao cadastro">'+
+        '<option value="">— Selecione o voluntário —</option>'+
+        availableOptions.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===g.id?' selected':'')+'>'+
+          esc(p.name)+(p.active?'':' (afastado)')+'</option>').join('')+'</select></div>';
+    }else if(g.id&&!g.active){
+      output+='<small class="forms-unmatched">Voluntário afastado no cadastro</small>';
+    }
+    output+='</td><td>'+g.dates.map(date=>
+      '<span class="forms-date">'+esc(formsDateLabel(date))+'</span>').join(' ')+
+      (g.id&&g.existing?'<small class="forms-matched">'+g.existing+' ausência(s) já cadastrada(s)</small>':'')+
+      '</td></tr>';
   }
   output+='</tbody></table></div>';
-  if(plan.missing)
-    output+='<div class="info warn">Selecione o cadastro correto para '+plan.missing+' voluntário(s) antes de importar. Não é feita associação aproximada de nomes.</div>';
-  if(!plan.issues.length&&!plan.missing&&!plan.newItems.length)
-    output+='<div class="info">Todas as ausências deste CSV já estão cadastradas. Nenhum registro será duplicado.</div>';
-  output+='<p class="mini">A importação <b>adiciona</b> novas datas, sem apagar ausências manuais ou alterar as já cadastradas. '+
-    'Se uma resposta for corrigida depois, remova manualmente a data antiga na lista de ausências.</p>'+
+  if(people.length&&plan.missing)
+    output+='<div class="info warn">'+plan.missing+' nome(s) não foram identificados. '+
+      'Associe apenas esses nomes ao cadastro correto antes de importar.</div>';
+  if(people.length&&!plan.issues.length&&!plan.missing&&!plan.newItems.length)
+    output+='<div class="info">Todas as ausências do CSV já estão cadastradas. Nenhuma data será duplicada.</div>';
+  output+='<p class="mini">A importação <b>adiciona</b> datas sem apagar registros antigos ou manuais. '+
+    'Se alguém cancelar uma ausência, remova a data antiga na seção de ausências.</p>'+
     '<button type="button" id="formsImportApply" class="primary"'+
-    (plan.issues.length||plan.missing||!plan.newItems.length?' disabled':'')+
-    '>✓ Confirmar importação de '+plan.newItems.length+' ausência(s)</button>';
+    (!people.length||plan.issues.length||plan.missing||!plan.newItems.length?' disabled':'')+
+    '>✓ Registrar '+plan.newItems.length+' ausência(s)</button>';
   target.innerHTML=output;
 }
 function formsImportMessage(msg,type='ok'){
@@ -213,7 +221,7 @@ function initFormsImport(){
       try{
         const parsed=formsParseResponses(await file.text());
         formsImportState={parsed,overrides:{}};
-        formsImportMessage('CSV lido. Confira a prévia e os nomes antes de confirmar.');
+        formsImportMessage('CSV lido. Confira os nomes e as datas para registrar as ausências.');
         renderFormsImportPreview();
       }catch(err){formsImportMessage('Não foi possível ler o CSV: '+err.message,'error')}
       return;
@@ -226,6 +234,11 @@ function initFormsImport(){
     }
   });
   panel.addEventListener('click',event=>{
+    if(event.target.id==='formsRestoreTeam'){
+      const restore=$('restoreButton');
+      if(restore)restore.click();
+      return;
+    }
     if(event.target.id!=='formsImportApply'||!formsImportState)return;
     const plan=formsMakePlan(formsImportState.parsed,[...db.teachers,...db.helpers],
       rulesConfig().absences,formsImportState.overrides);
