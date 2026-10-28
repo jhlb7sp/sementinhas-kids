@@ -76,3 +76,4 @@ td,th{padding:8px 7px}
 .program-print-day tr{break-inside:avoid}
 .program-print-day h4,.program-title,.program-break,.program-change{print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
+@media print{body.program-only-print #sheetTitle,body.program-only-print .printable>h3,body.program-only-print .printable>.tablewrap,body.program-only-print #printEvents,body.program-only-print .program-print:not(.print-target){display:none!important}body.program-only-print .program-print.print-target{break-before:auto}}
