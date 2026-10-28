@@ -136,7 +136,7 @@ function assignSundayWithRules(slots,available,used,stats,year,month,asTeachers=
       }
       choose(0,new Set(),new Map(),0);
     }
-    return list.sort((a,b)=>a.cost-b.cost).slice(0,32);
+    const balanced=[];for(const day of dateCandidates){const options=list.filter(choice=>slots[choice.forced.keys().next().value]?.day===day).sort((a,b)=>a.cost-b.cost);balanced.push(...options.slice(0,8));}return balanced.sort((a,b)=>a.cost-b.cost);
   };
   const alternatives=groups.map(candidatesFor);
   if(alternatives.some(a=>!a.length))return null;
