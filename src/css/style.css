@@ -77,3 +77,15 @@ td,th{padding:8px 7px}
 .program-print-day h4,.program-title,.program-break,.program-change{print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
 @media print{body.program-only-print #sheetTitle,body.program-only-print .printable>h3,body.program-only-print .printable>.tablewrap,body.program-only-print #printEvents,body.program-only-print .program-print:not(.print-target){display:none!important}body.program-only-print .program-print.print-target{break-before:auto}}
+
+
+/* Regras configuráveis e calendário de ausências */
+#rulesPanel .panel{border-color:#cde6f2;background:linear-gradient(180deg,#f5fbff 0%,#fff 28%)}
+#rulesPanel .rule-line{display:flex;gap:12px;align-items:center;padding:10px 11px;margin:7px 0;border:1px solid #d8e7ef;border-radius:11px;background:#f7fbff;flex-wrap:wrap}
+#rulesPanel .rule-line .checkrow{flex:1;min-width:190px;font-weight:700}
+#rulesPanel .rule-line .mini{flex:1;min-width:175px;color:#65747e}
+#rulesPanel .rules-person-scroll{max-height:280px;overflow:auto;border-radius:12px;border:1px solid #e2ebee;margin-bottom:13px}
+#rulesPanel .rules-person-scroll thead{position:sticky;top:0;z-index:1}
+#rulesPanel .rules-person-scroll td{padding:6px 9px}
+#rulesPanel .fields{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+@media print{#rulesPanel{display:none!important}}
