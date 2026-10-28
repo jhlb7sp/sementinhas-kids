@@ -47,6 +47,7 @@ $('eventEditor').addEventListener('click',e=>{
  captureEventForm();
  const arr=db.draft.events;
  if(btn.dataset.saveEvent!==undefined){
+  if(!approveWithWarnings('salvar este evento'))return;
   saveEventForm();
   const status=btn.closest('.event-card')?.querySelector('[data-event-status]');
   if(status)status.textContent='✅ Evento salvo e prévia atualizada.';
