@@ -18,10 +18,15 @@ test('todos os scripts estão referenciados e na ordem necessária',()=>{
   assert.ok(names.indexOf('src/js/regras.js')>names.indexOf('src/js/core.js'));
   assert.ok(names.indexOf('src/js/regras.js')<names.indexOf('src/js/escala.js'));
   assert.ok(names.indexOf('src/js/regras-ui.js')<names.indexOf('src/js/app.js'));
+  assert.ok(names.indexOf('src/js/forms-import.js')>names.indexOf('src/js/regras.js'));
+  assert.ok(names.indexOf('src/js/forms-import.js')<names.indexOf('src/js/app.js'));
 });
 test('a aba de backup contém o editor de regras',()=>{
   const html=fs.readFileSync(path.join(base,'index.html'),'utf8');
   assert.match(html,/id="rulesPanel"/);
+  assert.match(html,/id="formsImportPanel"/);
+  const app=fs.readFileSync(path.join(base,'src/js/app.js'),'utf8');
+  assert.match(app,/initFormsImport\(\)/);
   const code=fs.readFileSync(path.join(base,'src/js/regras-ui.js'),'utf8');
   for(const field of ['newRuleType','addRule','addAbsence','limitTeachers','limitHelpers','absencePerson','absenceDate'])
     assert.ok(code.includes(field),field);
