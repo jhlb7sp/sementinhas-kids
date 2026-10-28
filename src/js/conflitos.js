@@ -94,7 +94,7 @@ function approveWithWarnings(action){
     const msg='Ação bloqueada: há voluntários em salas diferentes no mesmo culto.\n\n'+v.errors.join('\n')+'\n\nOs campos em conflito estão destacados em vermelho.';
     show(v.errors.join(' | '),'error');
     alert(msg);
-    const first=document.querySelector('.schedule-blocking');
+    const first=typeof document==='undefined'?null:document.querySelector('.schedule-blocking');
     first?.scrollIntoView?.({block:'center',behavior:'smooth'});
     return false;
   }
