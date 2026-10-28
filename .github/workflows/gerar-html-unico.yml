@@ -41,6 +41,15 @@ jobs:
           name: Sementinhas-Kids-HTML-Unico
           path: Sementinhas_Kids_Offline_Arquivo_Unico.html
           compression-level: 6
+      - name: Disponibilizar HTML gerado na branch de distribuicao
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f Sementinhas_Kids_Offline_Arquivo_Unico.html
+          if ! git diff --cached --quiet; then
+            git commit -m "build: atualiza HTML unico offline [skip ci]"
+            git push origin HEAD:release/html-unico-lideranca
+          fi
       - name: Criar link direto no GitHub Releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
