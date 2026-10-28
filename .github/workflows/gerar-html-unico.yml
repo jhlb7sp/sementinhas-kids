@@ -1,0 +1,54 @@
+name: Gerar HTML unico para a lideranca
+on:
+  push:
+    branches:
+      - release/html-unico-lideranca
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-html:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testar aplicacao
+        run: npm run check
+      - name: Gerar HTML unico
+        run: node scripts/build-arquivo-unico.mjs
+      - name: Conferir recursos incorporados
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          file = Path('Sementinhas_Kids_Offline_Arquivo_Unico.html')
+          html = file.read_text(encoding='utf-8')
+          assert html.count('<script>') >= 8
+          assert 'data:image/png;base64,' in html
+          assert 'src="src/js/' not in html
+          assert 'src="src/assets/' not in html
+          assert 'href="src/css/' not in html
+          print('Arquivo único verificado:', file.stat().st_size, 'bytes')
+          PY
+      - name: Publicar arquivo unico para baixar
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sementinhas-Kids-HTML-Unico
+          path: Sementinhas_Kids_Offline_Arquivo_Unico.html
+          compression-level: 6
+      - name: Criar link direto no GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="sementinhas-kids-offline-lideranca-2026-10-28"
+          FILE="Sementinhas_Kids_Offline_Arquivo_Unico.html"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$FILE" --clobber
+          else
+            gh release create "$TAG" "$FILE" --target "$GITHUB_SHA" --title "Sementinhas Kids - HTML unico para testes" --notes "Versao offline em um unico arquivo HTML. Os dados sao salvos no navegador e nao acompanham o arquivo. Use Dados e Backup para exportar um backup JSON. Esta edicao foi gerada automaticamente do codigo atual."
+          fi
