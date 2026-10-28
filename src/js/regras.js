@@ -239,7 +239,7 @@ function validateConfiguredRules(draft){
     const p=findVolunteer(id);
     const cap=monthlyLimit(id),byMonth=new Map();
     for(const date of dates)if(validIsoDate(date))byMonth.set(date.slice(0,7),(byMonth.get(date.slice(0,7))||0)+1);
-    for(const [month,count] of byMonth)if(cap&&count>cap)errors.push((p?.name||id)+' excedeu limite em '+month+': '+count+' de '+cap+' participações.'];
+    for(const [month,count] of byMonth)if(cap&&count>cap)errors.push((p?.name||id)+' excedeu limite em '+month+': '+count+' de '+cap+' participações.');
     for(const date of dates)if(isAbsent(id,date))errors.push((p?.name||id)+' está ausente em '+date+'.');
   }
   return errors;
