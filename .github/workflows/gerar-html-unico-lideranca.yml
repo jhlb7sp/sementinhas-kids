@@ -35,6 +35,8 @@ jobs:
           assert 'href="src/css/' not in html
           print('Arquivo único verificado:', file.stat().st_size, 'bytes')
           PY
+      - name: Criar ZIP opcional para facilitar o compartilhamento
+        run: python3 -m zipfile -c Sementinhas_Kids_Offline_Arquivo_Unico.zip Sementinhas_Kids_Offline_Arquivo_Unico.html
       - name: Publicar arquivo unico para baixar
         uses: actions/upload-artifact@v4
         with:
@@ -57,7 +59,7 @@ jobs:
           TAG="sementinhas-kids-offline-lideranca-2026-11-24"
           FILE="Sementinhas_Kids_Offline_Arquivo_Unico.html"
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$FILE" --clobber
+            gh release upload "$TAG" "$FILE" "Sementinhas_Kids_Offline_Arquivo_Unico.zip" --clobber
           else
-            gh release create "$TAG" "$FILE" --target "$GITHUB_SHA" --title "Sementinhas Kids - HTML unico para testes" --notes "Versao offline em um unico arquivo HTML. Os dados sao salvos no navegador e nao acompanham o arquivo. Use Dados e Backup para exportar um backup JSON. Esta edicao foi gerada automaticamente do codigo atual."
+            gh release create "$TAG" "$FILE" "Sementinhas_Kids_Offline_Arquivo_Unico.zip" --target "$GITHUB_SHA" --title "Sementinhas Kids - HTML unico para testes" --notes "Versao offline em um unico arquivo HTML. Os dados sao salvos no navegador e nao acompanham o arquivo. Use Dados e Backup para exportar um backup JSON. Esta edicao foi gerada automaticamente do codigo atual."
           fi
